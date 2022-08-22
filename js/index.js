@@ -25,6 +25,7 @@ function listDeets(bookObj) {
     <p>${bookObj.description}</p>
     <ul id='${bookObj.title}Users'>
     </ul>
+    <button type='button' id='likeBtn'>Like this book!</button>
     `
     bookObj.users.forEach(user => {
         console.log(user.username)
@@ -32,5 +33,24 @@ function listDeets(bookObj) {
         li.textContent = `${user.username}`
         let userList = document.getElementById(`${bookObj.title}Users`)
         userList.appendChild(li)
+    })
+    let likeButton = document.getElementById('likeBtn')
+    likeButton.addEventListener('click', () => {
+        // create PATCH json obj
+        let patchUsersJson = {"users": [...bookObj.users, {"id": 11, "username": "jonmoore"}]}
+        // fetch POST
+        fetch(`http://localhost:3000/books/${bookObj.id}`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(patchUsersJson)
+        })
+        .then(resp => resp.json())
+        .then(updatedBook => {
+            listDeets(updatedBook)
+        })
+        // rerun listDeets with returned data from fetch
+        
     })
 }
