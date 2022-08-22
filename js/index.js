@@ -25,7 +25,7 @@ function listDeets(bookObj) {
     <p>${bookObj.description}</p>
     <ul id='${bookObj.title}Users'>
     </ul>
-    <button type='button' id='likeBtn'>Like this book!</button>
+    <button type='button' id='likeBtn'></button>
     `
     bookObj.users.forEach(user => {
         console.log(user.username)
@@ -34,11 +34,23 @@ function listDeets(bookObj) {
         let userList = document.getElementById(`${bookObj.title}Users`)
         userList.appendChild(li)
     })
+    let likeUnlike = document.getElementById('likeBtn')
+    console.log('test', bookObj.users.find(user => user.username === 'jonmoore'))
+    if (bookObj.users.find(user => user.username === 'jonmoore') === undefined) {
+        likeUnlike.innerText = 'Like'
+        addLiker(bookObj)
+    } else {
+        likeUnlike.innerText = 'Unlike'
+        addUnliker(bookObj)
+    }
+    
+}
+
+function addLiker(bookObj) {
+    console.log('liker')
     let likeButton = document.getElementById('likeBtn')
     likeButton.addEventListener('click', () => {
-        // create PATCH json obj
         let patchUsersJson = {"users": [...bookObj.users, {"id": 11, "username": "jonmoore"}]}
-        // fetch POST
         fetch(`http://localhost:3000/books/${bookObj.id}`, {
             method: 'PATCH',
             headers: {
@@ -49,8 +61,25 @@ function listDeets(bookObj) {
         .then(resp => resp.json())
         .then(updatedBook => {
             listDeets(updatedBook)
+        })   
+    })
+}
+function addUnliker(bookObj) {
+    console.log('unliker')
+    let likeButton = document.getElementById('likeBtn')
+    likeButton.addEventListener('click', () => {
+        let deleteArr = bookObj.users.slice(0, bookObj.users.length-1)
+        let deleteUsersJson = {"users": [...deleteArr]}
+        fetch(`http://localhost:3000/books/${bookObj.id}`, {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(deleteUsersJson)
         })
-        // rerun listDeets with returned data from fetch
-        
+        .then(resp => resp.json())
+        .then(updatedBook => {
+            listDeets(updatedBook)
+        })   
     })
 }
