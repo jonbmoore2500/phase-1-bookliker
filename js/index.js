@@ -23,5 +23,14 @@ function listDeets(bookObj) {
     <h2>${bookObj.subtitle}</h2>
     <h2>${bookObj.author}</h2>
     <p>${bookObj.description}</p>
+    <ul id='${bookObj.title}Users'>
+    </ul>
     `
+    bookObj.users.forEach(user => {
+        console.log(user.username)
+        let li = document.createElement('li')
+        li.textContent = `${user.username}`
+        let userList = document.getElementById(`${bookObj.title}Users`)
+        userList.appendChild(li)
+    })
 }
