@@ -23,7 +23,7 @@ function listDeets(bookObj) {
     <h2>${bookObj.subtitle}</h2>
     <h2>${bookObj.author}</h2>
     <p>${bookObj.description}</p>
-    <ul id='${bookObj.title}Users'>
+    <ul id='${bookObj.id}Users'>
     </ul>
     <button type='button' id='likeBtn'></button>
     `
@@ -31,7 +31,8 @@ function listDeets(bookObj) {
         console.log(user.username)
         let li = document.createElement('li')
         li.textContent = `${user.username}`
-        let userList = document.getElementById(`${bookObj.title}Users`)
+        let userList = document.getElementById(`${bookObj.id}Users`)
+        console.log('userlist', userList)
         userList.appendChild(li)
     })
     let likeUnlike = document.getElementById('likeBtn')
@@ -43,7 +44,6 @@ function listDeets(bookObj) {
         likeUnlike.innerText = 'Unlike'
         addUnliker(bookObj)
     }
-    
 }
 
 function addLiker(bookObj) {
